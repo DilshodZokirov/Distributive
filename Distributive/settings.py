@@ -207,21 +207,39 @@ LOGGING = {
         }
     },
 }
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+# SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+#
+# LINODE_BUCKET = 'delivery2'
+# LINODE_BUCKET_REGION = 'us-east-1'
+# LINODE_BUCKET_ACCESS_KEY = 'VQCFA3CMEX6X2QJLP3TN'
+# LINODE_BUCKET_SECRET_KEY = 'b66MAU3lVaiRRHNYNkr7UxTZ1ta43Tb0BH3O9K1r'
+# AWS_S3_ENDPOINT_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com"
+# AWS_ACCESS_KEY_ID = LINODE_BUCKET_ACCESS_KEY
+# AWS_SECRET_ACCESS_KEY = LINODE_BUCKET_SECRET_KEY
+# AWS_S3_REGION_NAME = LINODE_BUCKET_REGION
+# AWS_S3_USE_SSL = True
+# AWS_STORAGE_BUCKET_NAME = LINODE_BUCKET
+# STATIC_URL = f'https://{LINODE_BUCKET}.{LINODE_BUCKET_REGION}.linodeobjects.com/'
+# AWS_DEFAULT_ACL = "authenticated-read"
+# Linode bucket credentials
+LINODE_BUCKET_NAME = os.environ.get('LINODE_BUCKET_NAME')
+LINODE_BUCKET_REGION = os.environ.get('LINODE_BUCKET_REGION')
+LINODE_BUCKET_ACCESS_KEY = os.environ.get('LINODE_BUCKET_ACCESS_KEY')
+LINODE_BUCKET_SECRET_KEY = os.environ.get('LINODE_BUCKET_SECRET_KEY')
 
-LINODE_BUCKET = 'delivery2'
-LINODE_BUCKET_REGION = 'us-east-1'
-LINODE_BUCKET_ACCESS_KEY = 'VQCFA3CMEX6X2QJLP3TN'
-LINODE_BUCKET_SECRET_KEY = 'b66MAU3lVaiRRHNYNkr7UxTZ1ta43Tb0BH3O9K1r'
-AWS_S3_ENDPOINT_URL = f"https://{LINODE_BUCKET_REGION}.linodeobjects.com"
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'  # Upload media files to bucket
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'  # Add files to bucket when running collectstatic
+STATIC_URL = f'https://{LINODE_BUCKET_NAME}.{LINODE_BUCKET_REGION}.linodeobjects.com/'
+
+# Using AWS template settings for Boto3 with Linode crentials
+AWS_S3_ENDPOINT_URL = f'https://{LINODE_BUCKET_REGION}.linodeobjects.com'
 AWS_ACCESS_KEY_ID = LINODE_BUCKET_ACCESS_KEY
 AWS_SECRET_ACCESS_KEY = LINODE_BUCKET_SECRET_KEY
 AWS_S3_REGION_NAME = LINODE_BUCKET_REGION
 AWS_S3_USE_SSL = True
-AWS_STORAGE_BUCKET_NAME = LINODE_BUCKET
-STATIC_URL = f'https://{LINODE_BUCKET}.{LINODE_BUCKET_REGION}.linodeobjects.com/'
+AWS_STORAGE_BUCKET_NAME = LINODE_BUCKET_NAME
 AWS_DEFAULT_ACL = "authenticated-read"  # Make uploaded files public
 
 STATIC_ROOT = join_path(BASE_DIR, 'static')
