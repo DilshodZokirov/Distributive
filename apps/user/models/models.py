@@ -42,6 +42,9 @@ class CustomUserManager(BaseUserManager):
 class District(models.Model):
     name = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.name
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     class TYPE(models.Choices):
@@ -73,16 +76,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.phone_number
-
-#
-# class Role(BaseModel):
-#     class TYPE(models.Choices):
-#         OFFICE_MANAGER = "office_manager"
-#         AGENT = "agent"
-#         MANAGER = "manager"
-#         DELIVERY = "delivery"
-#
-#     type = models.CharField(max_length=50, choices=TYPE.choices, default=TYPE.DELIVERY)
-#
-#     def __str__(self):
-#         return self.type

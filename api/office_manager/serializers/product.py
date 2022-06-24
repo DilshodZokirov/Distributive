@@ -75,3 +75,30 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             validated_data['temporarily_unavailable'] = False
         Product.objects.create(**validated_data)
         return {"success"}
+
+
+class ProductUpdateAllSerializer(serializers.ModelSerializer):
+    pictures = serializers.FileField(required=False)
+    name = serializers.CharField(required=False)
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    price1 = serializers.FloatField(required=False)
+    price2 = serializers.FloatField(required=False)
+    compound = serializers.CharField(required=False)
+    expiration_date = serializers.DateTimeField(required=True)
+    count = serializers.FloatField()
+    count_of_product = serializers.FloatField()
+
+    class Meta:
+        model = Product
+        fields = [
+            'pictures',
+            'name',
+            'category',
+            'price1',
+            'price2',
+            'compound',
+            'expiration_date',
+            'temporarily_unavailable',
+            'count',
+            'count_of_product'
+        ]

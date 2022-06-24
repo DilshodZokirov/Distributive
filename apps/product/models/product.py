@@ -20,5 +20,5 @@ class Product(Auditable):
     count = models.IntegerField(null=True, blank=True)
     count_of_product = models.IntegerField(null=True, blank=True)
 
-
-
+    def __str__(self):
+        return self.name

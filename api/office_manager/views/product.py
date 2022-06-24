@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.office_manager.serializers.product import CategoryGetAllSerializer, CategoryOneProductAll, \
-    ProductCreateSerializer, ProductGetAllSerializer
+    ProductCreateSerializer, ProductGetAllSerializer, ProductUpdateAllSerializer
 from apps.product.models import Category, Product
 
 
@@ -44,4 +44,8 @@ class ProductModelViewSet(ModelViewSet):
 
     @action(methods=['put'], detail=True)
     def update_product(self, request, *args, **kwargs):
-        pass
+        self.serializer_class = ProductUpdateAllSerializer
+        serializer = self.get_serializer(self.get_object(), data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'message': "success"})
