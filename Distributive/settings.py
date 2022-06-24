@@ -127,18 +127,18 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = False
-
-CORS_ORIGIN_ALLOW_HEADERS = (
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'X-csrftoken',
-    'X-requested-with',
-)
+#
+# CORS_ORIGIN_ALLOW_HEADERS = (
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'X-csrftoken',
+#     'X-requested-with',
+# )
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
