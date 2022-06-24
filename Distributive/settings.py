@@ -163,7 +163,7 @@ SWAGGER_SETTINGS = {
     "is_authenticated": False,  # Set to True to enforce user authentication,
     "is_superuser": False,  # Set to True to enforce admin only access
 }
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -221,8 +221,10 @@ AWS_SECRET_ACCESS_KEY = LINODE_BUCKET_SECRET_KEY
 AWS_S3_REGION_NAME = LINODE_BUCKET_REGION
 AWS_S3_USE_SSL = True
 AWS_STORAGE_BUCKET_NAME = LINODE_BUCKET
+STATIC_URL = f'https://{LINODE_BUCKET}.{LINODE_BUCKET_REGION}.linodeobjects.com/'
+AWS_DEFAULT_ACL = "authenticated-read"  # Make uploaded files public
 
-STATIC_ROOT = join_path(BASE_DIR, 'staticfiles')
+STATIC_ROOT = join_path(BASE_DIR, 'static')
 MEDIA_ROOT = join_path(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 AUTH_USER_MODEL = 'apps_user.User'
