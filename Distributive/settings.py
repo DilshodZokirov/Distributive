@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'channels'
 
 ]
+CORS_ALLOWED_ORIGINS = ["*"]
 CELERY_BROKEN_URL = 'redis://localhost:6379'
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -124,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-
+CORS_ALLOW_ALL_ORIGINS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 #
