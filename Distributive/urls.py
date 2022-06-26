@@ -49,5 +49,7 @@ urlpatterns = [
     path('version1/user/', include('api.user.urls')),
     path('version1/office_manager/', include('api.office_manager.urls')),
     path('version1/agent/', include('api.agent.urls')),
+    path('version1/delivery/', include('api.delivery.urls')),
+    path('version1/manager/', include('api.manager.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

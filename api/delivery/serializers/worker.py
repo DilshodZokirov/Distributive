@@ -1,18 +1,8 @@
 from rest_framework import serializers
 
+from api.agent.serializers.worker import AllPriceSerializer
 from api.utils.serializer import DistrictUserSerializer
-from apps.order.models import Order
 from apps.user.models import User
-from apps.user.models.models import District
-
-
-class AllPriceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = [
-            'total_price',
-            'paid_price'
-        ]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
