@@ -102,3 +102,25 @@ class ProductUpdateAllSerializer(serializers.ModelSerializer):
             'count',
             'count_of_product'
         ]
+
+
+# class WarehouseAllSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         pass
+
+
+class GetOneProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'pictures',
+            'name',
+            'category',
+            'price1',
+            'price2',
+            'compound',
+            'expiration_date',
+            'temporarily_unavailable',
+            'count',
+            'count_of_product'
+        ]

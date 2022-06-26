@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from apps.user.models import User, Company
 
 # from apps.user.models import Role
-from apps.user.models.models import District
+from apps.user.models.models import District, UserMove
 
 
 class CustomUserAdmin(UserAdmin):
@@ -44,3 +44,8 @@ class AdminRole(ModelAdmin):
 @admin.register(District)
 class AdminDistrict(ModelAdmin):
     list_display = ['id', 'name']
+
+
+@admin.register(UserMove)
+class AdminUserMove(ModelAdmin):
+    list_display = ['id', 'lot', 'lon']

@@ -47,6 +47,7 @@ urlpatterns = [
                                             cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
     path('version1/user/', include('api.user.urls')),
-    path('version1/office_manager/', include('api.office_manager.urls'))
+    path('version1/office_manager/', include('api.office_manager.urls')),
+    path('version1/agent/', include('api.agent.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

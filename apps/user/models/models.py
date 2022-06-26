@@ -46,6 +46,12 @@ class District(models.Model):
         return self.name
 
 
+class UserMove(BaseModel):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='user_move')
+    lon = models.IntegerField()
+    lot = models.IntegerField()
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     class TYPE(models.Choices):
         OFFICE_MANAGER = "office_manager"
@@ -66,8 +72,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    lot = models.FloatField(null=True, blank=True)
-    lon = models.FloatField(null=True, blank=True)
     role = models.CharField(max_length=400, choices=TYPE.choices, default=TYPE.DELIVERY, null=True)
 
     USERNAME_FIELD = 'phone_number'
