@@ -14,8 +14,6 @@ class RegisterUserApiView(APIView):
             account: User = serializer.save()
             data['response'] = "Successfully registered new user"
             data['phone_number'] = account.phone_number
-            if Token.objects.get(user=account).key:
-                data['token'] = Token.objects.get(user=account).key
         else:
             data = serializer.errors
         return Response(data)

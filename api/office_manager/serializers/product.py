@@ -26,7 +26,8 @@ class CategoryGetAllSerializer(serializers.ModelSerializer):
         model = Category
         fields = [
             'id',
-            'name'
+            'name',
+            'category_image'
         ]
 
 
