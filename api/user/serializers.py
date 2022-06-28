@@ -32,7 +32,7 @@ class LoginUserSerializer(serializers.Serializer):
             attrs['user'] = user
             attrs['token'] = token
         return attrs
-
+main
 
 class RegistrationSerializer(serializers.ModelSerializer):
     district = serializers.PrimaryKeyRelatedField(queryset=District.objects.all())

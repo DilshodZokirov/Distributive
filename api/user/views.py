@@ -11,11 +11,11 @@ class RegisterUserApiView(APIView):
         serializer = RegistrationSerializer(data=request.data)
         data: dict = {}
         if serializer.is_valid():
-            account: User = serializer.save()
-            data['response'] = "Successfully registered new user"
-            data['phone_number'] = account.phone_number
+            serializer.save()
+            data['message'] = "Successfully"
+            # data['phone_number'] = account.phone_number
         else:
-            data = serializer.errors
+            data = {"message": "Bad Request"}
         return Response(data)
 
 
