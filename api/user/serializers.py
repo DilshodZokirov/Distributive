@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 
 from apps.user.models.company import Company
 from apps.user.models import User
-from apps.user.models.models import District
 
 
 class LoginUserSerializer(serializers.Serializer):
@@ -27,7 +26,7 @@ class LoginUserSerializer(serializers.Serializer):
             request = self.context['request']
             user = authenticate(request, phone_number=attrs.get('phone_number'), password=attrs.get('password'))
             if not user:
-                raise serializers.ValidationError({"message": "Bad Request"})
+                raise serializers.ValidationError('User is not found')
             token, _ = Token.objects.get_or_create(user=user)
             attrs['user'] = user
             attrs['token'] = token
@@ -35,17 +34,16 @@ class LoginUserSerializer(serializers.Serializer):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    district = serializers.PrimaryKeyRelatedField(queryset=District.objects.all())
     username = serializers.CharField(required=False)
     first_name = serializers.CharField(required=False)
     email = serializers.EmailField(required=False)
+    password = serializers.CharField()
     password2 = serializers.CharField()
     company = serializers.CharField()
 
     class Meta:
         model = User
         fields = [
-            'district',
             "username",
             "first_name",
             "last_name",
@@ -59,11 +57,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs: dict):
         phone_number = attrs.get('phone_number')
+        if User.objects.filter(phone_number=phone_number).exists():
+            raise ValidationError(
+                "Bunaqa telefon nomerli inson bizda bor iltimos boshqa nomerdan foydalaning yoki login qismiga o'ting !!!")
         if 10 >= len(phone_number) >= 12:
             raise ValidationError("Iltimos telefon nomerni to'g'ri kiriting !!!")
         if attrs.get('password') != attrs.get("password2"):
             raise ValidationError("Iltimos parolni to'ri kiriting !!!")
-        if User.objects.filter(phone_number=phone_number).exists():
+        if User.objects.filter(phone_number=phone_number, password=attrs.get("password")).exists():
             raise ValidationError("Bunaqa inson bizning ro'yxatda bor")
         if Company.objects.filter(name=attrs.get("company")).exists():
             raise ValidationError("Bunday Company bizda bor iltimos boshqa nom qo'ying !!!")
@@ -72,7 +73,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data: dict):
         username = validated_data.get("username")
-        district = validated_data.get('district')
         first_name = validated_data.get("first_name")
         last_name = validated_data.get("last_name")
         email = validated_data.get("email")
@@ -88,17 +88,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
             password=password,
             phone_number=phone_number,
             company=company,
-            role="office_manager",
-            district=district
+            role="office_manager"
         )
         company.save()
         user.save()
         return user
 
 
-# 2022-06-28T14:18:15.840452+05:00
-
 class UserDetailSerializer(serializers.ModelSerializer):
+    # role = RoleDetailSerializer()
+
     class Meta:
         model = User
         fields = [
