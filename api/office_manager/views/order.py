@@ -23,14 +23,12 @@ class OrderModelViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(OrderModelViewSet, self).list(self, request, *args, **kwargs)
 
-    # order detail
     @action(methods=['get'], detail=True)
     def detail_order(self, request, *args, **kwargs):
         order = Order.objects.get(pk=kwargs['pk'])
         serializer = OrderDetailSerializer(order)
         return Response(serializer.data)
 
-    # income get
     @action(methods=['get'], detail=False)
     def income_sum_order(self, request, *args, **kwargs):
         order = Order.objects.filter(

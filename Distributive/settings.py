@@ -149,20 +149,36 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 SWAGGER_SETTINGS = {
-    "exclude_namespaces": [],  # List URL namespaces to ignore
-    "api_version": '0.1',  # Specify your API's version
-    "api_path": "/",  # Specify the path to your API not a root level
-    "enabled_methods": [  # Specify which methods to enable in Swagger UI
-        'get',
-        'post',
-        'put',
-        'patch',
-        'delete'
-    ],
-    "api_key": 'django-insecure-*%px^@xkuy_ih6bl62@@3g=607z_k-n0mnq5%*pdod+#%77ss3',  # An API key
-    "is_authenticated": False,  # Set to True to enforce user authentication,
-    "is_superuser": False,  # Set to True to enforce admin only access
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
+    'USE_SESSION_AUTH': False,
+    'DOC_EXPANSION': 'list',
+    'APIS_SORTER': 'alpha',
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'Token',
+            'in': 'header',
+            'name': 'Authorization',
+            "description": "Token"
+        }
+    },
 }
+
+# SWAGGER_SETTINGS = {
+#     "exclude_namespaces": [],  # List URL namespaces to ignore
+#     "api_version": '0.1',  # Specify your API's version
+#     "api_path": "/",  # Specify the path to your API not a root level
+#     "enabled_methods": [  # Specify which methods to enable in Swagger UI
+#         'get',
+#         'post',
+#         'put',
+#         'patch',
+#         'delete'
+#     ],
+#     "api_key": 'django-insecure-*%px^@xkuy_ih6bl62@@3g=607z_k-n0mnq5%*pdod+#%77ss3',  # An API key
+#     "is_authenticated": False,  # Set to True to enforce user authentication,
+#     "is_superuser": False,  # Set to True to enforce admin only access
+# }
 # STATIC_URL = 'static/'
 CHANNEL_LAYERS = {
     'default': {
