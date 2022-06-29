@@ -34,8 +34,6 @@ class LoginUserSerializer(serializers.Serializer):
         return attrs
 
 
-# main
-
 class RegistrationSerializer(serializers.ModelSerializer):
     district = serializers.PrimaryKeyRelatedField(queryset=District.objects.all())
     username = serializers.CharField(required=False)
@@ -98,9 +96,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
-    # role = RoleDetailSerializer()
+# 2022-06-28T14:18:15.840452+05:00
 
+class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
