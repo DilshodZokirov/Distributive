@@ -27,7 +27,7 @@ class LoginUserSerializer(serializers.Serializer):
             request = self.context['request']
             user = authenticate(request, phone_number=attrs.get('phone_number'), password=attrs.get('password'))
             if not user:
-                raise serializers.ValidationError('User is not found')
+                raise serializers.ValidationError({"message": "Bad Request"})
             token, _ = Token.objects.get_or_create(user=user)
             attrs['user'] = user
             attrs['token'] = token
