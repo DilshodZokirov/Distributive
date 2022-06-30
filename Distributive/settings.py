@@ -156,14 +156,13 @@ SWAGGER_SETTINGS = {
     'APIS_SORTER': 'alpha',
     'SECURITY_DEFINITIONS': {
         'api_key': {
-            'type': 'Token',
+            'type': 'APIKey',
             'in': 'header',
             'name': 'Authorization',
             "description": "Token"
         }
     },
 }
-
 # SWAGGER_SETTINGS = {
 #     "exclude_namespaces": [],  # List URL namespaces to ignore
 #     "api_version": '0.1',  # Specify your API's version
