@@ -156,7 +156,7 @@ SWAGGER_SETTINGS = {
     'APIS_SORTER': 'alpha',
     'SECURITY_DEFINITIONS': {
         'api_key': {
-            'type': 'APIKey',
+            'type': 'apiKey',
             'in': 'header',
             'name': 'Authorization',
             "description": "Token"
