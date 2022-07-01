@@ -125,3 +125,27 @@ class GetOneProductSerializer(serializers.ModelSerializer):
             'count',
             'count_of_product'
         ]
+
+
+class CreateCategorySerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    category_image = serializers.FileField(required=False)
+
+    class Meta:
+        model = Category
+        fields = [
+            "name",
+            "category_image"
+        ]
+
+    def create(self, validated_data: dict):
+        company = self.context['request'].user.company
+        name = validated_data.get("name")
+        category_image = validated_data.get("category_image")
+        category = Category.objects.create(
+            company=company,
+            name=name,
+            category_image=category_image
+        )
+        category.save()
+        return {}
