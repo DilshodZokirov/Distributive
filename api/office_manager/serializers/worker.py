@@ -15,6 +15,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     date_of_birth = serializers.DateField(required=False)
     phone_number = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
+    role = serializers.CharField(required=True)
 
     class Meta:
         model = User
@@ -26,6 +27,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'last_name',
             'date_of_birth',
             'phone_number',
+            'role',
             'password',
             'company'
         ]
