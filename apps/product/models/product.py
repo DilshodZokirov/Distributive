@@ -1,10 +1,9 @@
 from django.db import models
-from Distributive.models import Auditable
-from apps.user.models import Company
-from apps.user.models.models import BaseModel
+from Distributive.models import BaseModel
+from apps.user.models.models import Company
 
 
-class Category(models.Model):
+class Category(BaseModel):
     name = models.CharField(max_length=300, unique=True)
     category_image = models.FileField(upload_to='category', null=True, blank=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='order_category')
@@ -13,7 +12,7 @@ class Category(models.Model):
         return f"{self.name}"
 
 
-class Product(Auditable):
+class Product(BaseModel):
     name = models.CharField(max_length=300)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="product_category")
     price1 = models.FloatField(null=True, blank=True)
@@ -27,12 +26,3 @@ class Product(Auditable):
 
     def __str__(self):
         return self.name
-
-
-# class OrderProduct(BaseModel):
-    # order_id = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='rel_order')
-    # product_id = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='rel_product')
-    # count = models.IntegerField(default=1)
-    #
-    # def __str__(self):
-    #     return f"{self.order_id.customer_name} - {self.product_id.name}"

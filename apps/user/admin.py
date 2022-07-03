@@ -4,8 +4,6 @@ from django.contrib.admin import ModelAdmin
 from apps.user.forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.admin import UserAdmin
 from apps.user.models import User, Company
-
-# from apps.user.models import Role
 from apps.user.models.models import District, UserMove
 
 
@@ -13,19 +11,19 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ('id', 'phone_number', 'is_staff', 'is_active', 'role', 'first_name')
+    list_display = ('id', 'phone_number', 'is_staff', 'is_active', 'role', 'first_name', "is_director")
     list_filter = ('phone_number',)
     fieldsets = (
         (None, {'fields': (
             'phone_number', 'username', 'password', 'first_name', 'last_name', 'role', 'district', 'company')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', "is_director")}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': (
                 'username', 'password_one', 'password_two', 'phone_number', 'first_name', 'last_name', 'role',
-                'company', 'district'
+                'company', 'district', "is_director"
             )
         }),
     )

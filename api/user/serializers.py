@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 
-from apps.user.models.company import Company
+from apps.user.models import Company
 from apps.user.models import User
 
 
@@ -88,16 +88,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
             password=password,
             phone_number=phone_number,
             company=company,
-            role="office_manager"
+            role="office_manager",
+            is_director=True
         )
+        company.created_by = user
         company.save()
         user.save()
         return user
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    # role = RoleDetailSerializer()
-
     class Meta:
         model = User
         fields = [

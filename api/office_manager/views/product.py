@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from api.office_manager.serializers.product import CategoryGetAllSerializer, CategoryOneProductAll, \
+from api.office_manager.serializers.product import CategoryGetAllSerializer, \
     ProductCreateSerializer, ProductGetAllSerializer, ProductUpdateAllSerializer, GetOneProductSerializer, \
     CreateCategorySerializer
 from apps.product.models import Category, Product
@@ -42,7 +42,7 @@ class ProductModelViewSet(ModelViewSet):
         serializer = ProductGetAllSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    @swagger_auto_schema(methods=['post'], request_body=ProductCreateSerializer,
+    @swagger_auto_schema(method='post', request_body=ProductCreateSerializer,
                          responses={200: "Success Created", 400: "Bad Request"})
     @action(methods=['post'], detail=False)
     def create_product(self, request, *args, **kwargs):

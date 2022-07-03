@@ -52,6 +52,8 @@ urlpatterns = [
     path('version1/agent/', include('api.agent.urls')),
     path('version1/delivery/', include('api.delivery.urls')),
     path('version1/manager/', include('api.manager.urls')),
-    path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path("version1/company/", include('api.company.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

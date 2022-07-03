@@ -8,6 +8,7 @@ from apps.user.models.models import District, UserMove
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    pictures_pic = serializers.FileField(required=False)
     district = serializers.PrimaryKeyRelatedField(queryset=District.objects.all())
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)
@@ -19,6 +20,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'district',
+            'pictures_pic',
             'username',
             'first_name',
             'last_name',
@@ -32,7 +34,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         phone_number = attrs.get('phone_number')
         password = attrs.get('password')
         if User.objects.filter(phone_number=phone_number).exists():
-            raise ValidationError("Bunday raqamli ishchi bor !!!")
+            raise ValidationError("Bunday ishchi bor !!!")
         if len(password) < 6:
             raise ValidationError("Iltimos passwordni 6 ta belgidan ko'proq kiriting !!!")
         return attrs
@@ -40,21 +42,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data: dict):
         company = self.context['request'].user.company
-        first_name = validated_data.get('first_name')
-        username = validated_data.get('username')
-        last_name = validated_data.get('last_name')
-        district = validated_data.get('district')
-        password = validated_data.get('password')
-        phone_number = validated_data.get("phone_number")
+        validated_data['company'] = company
+        validated_data['role'] = "agent"
         User.objects.create_user(
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            password=password,
-            phone_number=phone_number,
-            company=company,
-            role="agent",
-            district=district
+            **validated_data
         )
         return {"message": "Success"}
 
@@ -76,7 +67,8 @@ class WorkerUserAllSerializer(serializers.ModelSerializer):
             "id",
             'first_name',
             'last_name',
-            "district"
+            "district",
+            "phone_number",
         ]
 
 

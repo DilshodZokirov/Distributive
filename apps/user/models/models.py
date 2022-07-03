@@ -1,19 +1,9 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from django.db import models
 from django.utils import timezone
-from rest_framework.authtoken.models import Token
 
-from apps.user.models.company import Company
-
-
-class BaseModel(models.Model):
-    created_date = models.DateTimeField(auto_now_add=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
-    is_deleted = models.BooleanField(default=False)
-
-    class Meta:
-        abstract = True
+from Distributive.models import BaseModel
+from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
@@ -54,6 +44,7 @@ class UserMove(BaseModel):
 
 class User(AbstractBaseUser, PermissionsMixin):
     class TYPE(models.Choices):
+        UNEMPLOYED = "unemployed"
         OFFICE_MANAGER = "office_manager"
         AGENT = "agent"
         MANAGER = "manager"
@@ -61,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     username = models.CharField(max_length=500, null=True, blank=True)
     phone_number = models.CharField(max_length=13, unique=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True, related_name='company')
+    company = models.ForeignKey("Company", on_delete=models.CASCADE, null=True, blank=True, related_name='company')
     first_name = models.CharField(max_length=400, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     last_name = models.CharField(max_length=400, null=True)
@@ -71,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_pic = models.FileField(upload_to='user/profile', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
+    is_director = models.BooleanField(default=False)
     date_of_birth = models.DateField(null=True, blank=True)
     role = models.CharField(max_length=400, choices=TYPE.choices, default=TYPE.DELIVERY, null=True)
 
@@ -80,3 +72,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.phone_number
+
+
+class Company(BaseModel):
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=400, null=True, blank=True)
+    company_background = models.FileField(upload_to="company", null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.description}"

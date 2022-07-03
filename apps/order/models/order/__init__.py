@@ -1,8 +1,9 @@
-from Distributive.models import Auditable
+# from Distributive.models import Auditable
 from django.db import models
 
+from Distributive.models import BaseModel
 from apps.product.models import Product
-from apps.user.models.models import BaseModel, User
+from apps.user.models.models import User
 
 
 class Order(BaseModel):
@@ -19,7 +20,8 @@ class Order(BaseModel):
 
     pharmacy_name = models.CharField(max_length=30, null=True, blank=True)
     customer_name = models.CharField(max_length=300, null=True, blank=True)
-    seller = models.ForeignKey(User, on_delete=models.PROTECT, related_name='order_seller', null=True, blank=True)
+    # customer_phone_number = models.CharField(max_length=12, null=True, blank=True)
+    seller = models.ForeignKey(User, on_delete=models.PROTECT, related_name='order_seller')
     lot = models.CharField(max_length=400, null=True, blank=True)
     lon = models.CharField(max_length=300, null=True, blank=True)
     phone_number = models.CharField(max_length=50, null=False, blank=False)

@@ -1,11 +1,13 @@
 from django.db.models import Q
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from datetime import timedelta
 from datetime import datetime
 from api.office_manager.serializers.order import OfficeManagerOrderListSerializer, OrderDetailSerializer, \
     OrderIncomeAllSerializer, IncomeUpdateSerializer, CreditOrderSerializer, CreditOneOrderSerializer
@@ -17,18 +19,25 @@ class OrderModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [TokenAuthentication, ]
     serializer_class = OfficeManagerOrderListSerializer
+    parser_classes = (MultiPartParser, FileUploadParser)
     queryset = Order.objects.filter(Q(order_position='Basket') | Q(order_position='Verification'))
     filter_backends = (SearchFilter,)
 
     def list(self, request, *args, **kwargs):
         return super(OrderModelViewSet, self).list(self, request, *args, **kwargs)
 
+    @swagger_auto_schema(methods=['get'],
+                         manual_parameters=[openapi.Parameter("id", in_=openapi.IN_PATH,
+                                                              description="Product ID",
+                                                              type=openapi.TYPE_INTEGER)],
+                         responses={200: "Success Created", 400: "Bad Request", 404: "Not Found"})
     @action(methods=['get'], detail=True)
     def detail_order(self, request, *args, **kwargs):
         order = Order.objects.get(pk=kwargs['pk'])
         serializer = OrderDetailSerializer(order)
         return Response(serializer.data)
 
+    @swagger_auto_schema(method='get', responses={200: OrderIncomeAllSerializer, 400: "Bad Request"})
     @action(methods=['get'], detail=False)
     def income_sum_order(self, request, *args, **kwargs):
         order = Order.objects.filter(
@@ -38,6 +47,8 @@ class OrderModelViewSet(ModelViewSet):
         serializer = OrderIncomeAllSerializer(order, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(method='put', request_body=IncomeUpdateSerializer,
+                         responses={200: "Successfully Updated", 400: "Bad Request", 404: "Not Found"})
     @action(methods=['put'], detail=True)
     def income_price_send(self, request, *args, **kwargs):
         self.serializer_class = IncomeUpdateSerializer
@@ -46,6 +57,7 @@ class OrderModelViewSet(ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
+    @swagger_auto_schema(method="get", responses={200: CreditOrderSerializer, 400: "Bad Request"})
     @action(methods=['get'], detail=False)
     def get_order_credits(self, request, *args, **kwargs):
         order = Order.objects.filter(Q(paid_position='not_paid') |
@@ -55,6 +67,12 @@ class OrderModelViewSet(ModelViewSet):
         serializer = CreditOrderSerializer(order, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(method="get", manual_parameters=[
+        openapi.Parameter("id", in_=openapi.IN_PATH,
+                          description="Order Id",
+                          type=openapi.TYPE_INTEGER
+                          )
+    ], responses={200: CreditOneOrderSerializer, 400: "Bad Request", 404: "Not Found"})
     @action(methods=['get'], detail=True)
     def get_one_credit_order(self, request, *args, **kwargs):
         order = Order.objects.get(pk=kwargs['pk'])
