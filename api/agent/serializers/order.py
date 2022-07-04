@@ -56,8 +56,8 @@ class OrderProductCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderEditSerializer(serializers.ModelSerializer):
-    # id = serializers.PrimaryKeyRelatedField(queryset=OrderProduct.objects.filter(is_deleted=False))
     count = serializers.IntegerField()
+    # order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
 
     class Meta:
         model = OrderProduct

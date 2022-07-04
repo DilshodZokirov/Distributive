@@ -1,3 +1,4 @@
+from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.authentication import TokenAuthentication
@@ -17,8 +18,8 @@ class WorkerModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [TokenAuthentication, ]
     queryset = User.objects.all()
-    parser_classes = [FileUploadParser]
-    serializer_class = WorkerUserAllSerializer
+    parser_classes = [FileUploadParser, MultiPartParser]
+    # serializer_class = WorkerUserAllSerializer
     filter_backends = (SearchFilter,)
 
     @swagger_auto_schema(method="post", request_body=UserCreateSerializer,
@@ -36,8 +37,11 @@ class WorkerModelViewSet(ModelViewSet):
     def worker_list(self, request, *args, **kwargs):
         self.serializer_class = WorkerUserAllSerializer
         company = request.user.company_id
-        self.queryset = User.objects.filter(company=company)
-        page = self.paginate_queryset(self.queryset)
+        queryset = User.objects.filter(Q(company=company) & ((Q(role="agent")) | Q(role="manager")))
+        filters = self.request.query_params.get("filter", None)
+        if filters:
+            queryset = queryset.filter(role=filters)
+        page = self.paginate_queryset(queryset)
         serializer = self.get_serializer(page, many=True)
         return Response(serializer.data)
 

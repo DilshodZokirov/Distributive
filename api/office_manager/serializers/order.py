@@ -93,6 +93,29 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         ]
 
 
+class SellerSerializer(serializers.ModelSerializer):
+    district = DistrictUserSerializer()
+
+    class Meta:
+        model = User
+        fields = [
+            'first_name',
+            "last_name",
+            "district"
+        ]
+
+
+class OrderPositionSerializer(serializers.ModelSerializer):
+    seller = SellerSerializer()
+
+    class Meta:
+        model = Order
+        fields = [
+            'seller',
+            'order_position'
+        ]
+
+
 # income order
 class OrderIncomeAllSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,6 +128,11 @@ class OrderIncomeAllSerializer(serializers.ModelSerializer):
             'paid_position',
             'paid_price'
         ]
+
+
+# class OrderAllSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         pass
 
 
 class IncomeUpdateSerializer(serializers.ModelSerializer):

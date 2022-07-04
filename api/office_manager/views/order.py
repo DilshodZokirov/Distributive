@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from datetime import datetime
 from api.office_manager.serializers.order import OfficeManagerOrderListSerializer, OrderDetailSerializer, \
-    OrderIncomeAllSerializer, IncomeUpdateSerializer, CreditOrderSerializer, CreditOneOrderSerializer
+    OrderIncomeAllSerializer, IncomeUpdateSerializer, CreditOrderSerializer, CreditOneOrderSerializer, \
+    OrderPositionSerializer
 from apps.order.models import Order
 from utils import result
 
@@ -20,7 +21,7 @@ class OrderModelViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication, ]
     serializer_class = OfficeManagerOrderListSerializer
     parser_classes = (MultiPartParser, FileUploadParser)
-    queryset = Order.objects.filter(Q(order_position='Basket') | Q(order_position='Verification'))
+    queryset = Order.objects.filter(~Q(order_position='Finish'))
     filter_backends = (SearchFilter,)
 
     def list(self, request, *args, **kwargs):
@@ -28,7 +29,19 @@ class OrderModelViewSet(ModelViewSet):
 
     @swagger_auto_schema(methods=['get'],
                          manual_parameters=[openapi.Parameter("id", in_=openapi.IN_PATH,
-                                                              description="Product ID",
+                                                              description="Order ID",
+                                                              type=openapi.TYPE_INTEGER)],
+                         responses={200: "Success Created", 400: "Bad Request", 404: "Not Found"})
+    @action(methods=['get'], detail=True)
+    def order_position_detail(self, request, *args, **kwargs):
+        self.serializer_class = OrderPositionSerializer
+        order = Order.objects.get(pk=kwargs['pk'])
+        serializer = self.get_serializer(order)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(methods=['get'],
+                         manual_parameters=[openapi.Parameter("id", in_=openapi.IN_PATH,
+                                                              description="Order ID",
                                                               type=openapi.TYPE_INTEGER)],
                          responses={200: "Success Created", 400: "Bad Request", 404: "Not Found"})
     @action(methods=['get'], detail=True)
@@ -41,10 +54,10 @@ class OrderModelViewSet(ModelViewSet):
     @action(methods=['get'], detail=False)
     def income_sum_order(self, request, *args, **kwargs):
         order = Order.objects.filter(
-            Q(order_position="Verification") |
-            Q(order_position='Delivery') |
-            Q(order_position="Finish")).order_by('-created_date')
-        serializer = OrderIncomeAllSerializer(order, many=True)
+            ~Q(order_position="Basket")
+        ).order_by('-created_date')
+        page = self.paginate_queryset(order)
+        serializer = OrderIncomeAllSerializer(page, many=True)
         return Response(serializer.data)
 
     @swagger_auto_schema(method='put', request_body=IncomeUpdateSerializer,
@@ -64,7 +77,8 @@ class OrderModelViewSet(ModelViewSet):
                                      Q(paid_position='orphan_paid') |
                                      Q(order_position="Delivery") |
                                      Q(order_position='Finish'))
-        serializer = CreditOrderSerializer(order, many=True)
+        page = self.paginate_queryset(order)
+        serializer = CreditOrderSerializer(page, many=True)
         return Response(serializer.data)
 
     @swagger_auto_schema(method="get", manual_parameters=[
