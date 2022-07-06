@@ -8,6 +8,7 @@ from apps.user.models.models import User
 
 class Order(BaseModel):
     class OrderPosition(models.TextChoices):
+        PENDING = "Pending"
         BASKET = "Basket"
         VERIFICATION = "Verification"
         DELIVERY = "Delivery"
@@ -28,7 +29,7 @@ class Order(BaseModel):
     paid_price = models.FloatField(null=True, blank=True)
     total_price = models.FloatField(null=True, blank=True)
     paid_position = models.CharField(max_length=30, choices=MoneyPaid.choices, default=MoneyPaid.NOT_PAID)
-    order_position = models.CharField(max_length=400, choices=OrderPosition.choices, default=OrderPosition.BASKET)
+    order_position = models.CharField(max_length=400, choices=OrderPosition.choices, default=OrderPosition.PENDING)
 
     def __str__(self):
         return self.customer_name

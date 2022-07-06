@@ -223,10 +223,10 @@ LOGGING = {
     },
 }
 
-LINODE_BUCKET_NAME = 'delivery2'
-LINODE_BUCKET_REGION = 'us-east-1'
-LINODE_BUCKET_ACCESS_KEY = 'VQCFA3CMEX6X2QJLP3TN'
-LINODE_BUCKET_SECRET_KEY = 'b66MAU3lVaiRRHNYNkr7UxTZ1ta43Tb0BH3O9K1r'
+LINODE_BUCKET_NAME = 'distributive'
+LINODE_BUCKET_REGION = 'us-southeast-1'
+LINODE_BUCKET_ACCESS_KEY = 'R1CFP8QGKDETKK12965W'
+LINODE_BUCKET_SECRET_KEY = 'NHApn3c9oHsKTdSQpCKg8wXNfeenCcH2MlgJ0MFS'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'  # Upload media files to bucket
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'  # Add files to bucket when running collectstatic

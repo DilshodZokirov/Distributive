@@ -11,7 +11,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from api.agent.serializers.order import OrderListSerializer, CreateOrderSerializer, OrderProductCreateSerializer, \
-    OrderEditSerializer, OrderPositionDetailSerializer, OrderDetailAllProductSerializer
+    OrderEditSerializer, OrderPositionDetailSerializer, OrderDetailAllProductSerializer, OrderPositionUpdatedSerializer, \
+    OrderAllProductSerializer
 from api.office_manager.serializers.order import CreditOneOrderSerializer, CreditOrderSerializer, \
     OrderIncomeAllSerializer
 from apps.order.models import Order
@@ -23,7 +24,7 @@ class AgentModelOrderViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [TokenAuthentication, ]
     parser_classes = [MultiPartParser, FileUploadParser]
-    queryset = Order.objects.filter(Q(is_deleted=False) & Q(order_position='Basket'), ).order_by('-id')
+    queryset = Order.objects.filter(Q(is_deleted=False) & Q(order_position='Pending'), ).order_by('-id')
     filter_backends = (SearchFilter,)
     serializer_class = OrderListSerializer
 
@@ -47,19 +48,22 @@ class AgentModelOrderViewSet(ModelViewSet):
         serializer = self.get_serializer(self.get_object())
         return Response(serializer.data)
 
-    # @swagger_auto_schema(method="get", manual_parameters=[openapi.Parameter(
-    #     "id",
-    #     in_=openapi.IN_PATH,
-    #     description="Order ID",
-    #     type=openapi.TYPE_INTEGER
-    # )])
-    # @action(methods=['get'], detail=True)
-    # def order_detail_all_product(self, request, *args, **kwargs):
-    #     self.serializer_class = OrderDetailAllProductSerializer
-    #     order = Order.objects.get(pk=kwargs['pk'])
-    #     serializer = self.get_serializer(order)
-    #     return Response(serializer.data)
-    # @swagger_auto_schema()
+    @swagger_auto_schema(method='put', request_body=OrderPositionUpdatedSerializer,
+                         manual_parameters=[openapi.Parameter(
+                             "id",
+                             in_=openapi.IN_PATH,
+                             description="Order ID",
+                             type=openapi.TYPE_INTEGER,
+                             default=1
+                         )], responses={201: "Successfully Updated", 400: "Bad Request", 404: "Not Found"})
+    @action(methods=['put'], detail=True)
+    def updated_order_position(self, request, *args, **kwargs):
+        self.serializer_class = OrderPositionUpdatedSerializer
+        serializer = self.get_serializer(self.get_object(), data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Successfully Updated"})
+
     @swagger_auto_schema(method="post", request_body=CreateOrderSerializer,
                          responses={200: "Successfully Created", 400: "Bad Request"})
     @action(methods=['post'], detail=False)
@@ -79,6 +83,19 @@ class AgentModelOrderViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({200: "Successfully Created"})
+
+    @swagger_auto_schema(method='get',
+                         manual_parameters=[openapi.Parameter("id", in_=openapi.IN_PATH,
+                                                              description="Order ID",
+                                                              type=openapi.TYPE_INTEGER)],
+
+                         responses={200: OrderAllProductSerializer, 400: "Bad Request", 404: "Not Found"})
+    @action(methods=['get'], detail=True)
+    def order_product_all(self, request, *args, **kwargs):
+        self.serializer_class = OrderAllProductSerializer
+        order = Order.objects.get(pk=kwargs['pk'])
+        serializer = self.get_serializer(order)
+        return Response(serializer.data)
 
     @swagger_auto_schema(method="put",
                          request_body=OrderEditSerializer,

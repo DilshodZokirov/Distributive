@@ -55,8 +55,55 @@ class OrderProductCreateSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProductOrderAllSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'pictures',
+            "price1",
+            "price2",
+            "expiration_date"
+        ]
+
+
+class OrderProductSerializer(serializers.ModelSerializer):
+    product = ProductOrderAllSerializer(many=True)
+
+    class Meta:
+        model = OrderProduct
+        fields = [
+            "id",
+            "product"
+        ]
+
+
+class OrderAllProductSerializer(serializers.ModelSerializer):
+    order_product = OrderProductSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = [
+            'order_product'
+        ]
+
+
+class OrderPositionUpdatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = [
+            "order_position"
+        ]
+
+    def update(self, instance: Order, validated_data):
+        instance.order_position = "Basket"
+        instance.save()
+        return {"message": "Successfully Updated"}
+
+
 class OrderEditSerializer(serializers.ModelSerializer):
     count = serializers.IntegerField()
+
     # order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
 
     class Meta:

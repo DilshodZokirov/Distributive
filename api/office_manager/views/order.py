@@ -21,7 +21,7 @@ class OrderModelViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication, ]
     serializer_class = OfficeManagerOrderListSerializer
     parser_classes = (MultiPartParser, FileUploadParser)
-    queryset = Order.objects.filter(~Q(order_position='Finish'))
+    queryset = Order.objects.filter(~Q(order_position='Finish') & ~Q(order_position="Pending"))
     filter_backends = (SearchFilter,)
 
     def list(self, request, *args, **kwargs):
@@ -54,7 +54,7 @@ class OrderModelViewSet(ModelViewSet):
     @action(methods=['get'], detail=False)
     def income_sum_order(self, request, *args, **kwargs):
         order = Order.objects.filter(
-            ~Q(order_position="Basket")
+            ~Q(order_position="Basket") & ~Q(order_position="Pending")
         ).order_by('-created_date')
         page = self.paginate_queryset(order)
         serializer = OrderIncomeAllSerializer(page, many=True)

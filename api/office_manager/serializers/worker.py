@@ -82,6 +82,7 @@ class WorkerUserAllSerializer(serializers.ModelSerializer):
             'last_name',
             "district",
             "phone_number",
+            'profile_pic'
         ]
 
 

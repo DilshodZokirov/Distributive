@@ -9,3 +9,12 @@ class DistrictUserSerializer(serializers.ModelSerializer):
         fields = [
             'name'
         ]
+
+
+class DistrictEmployeeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = District
+        fields = [
+            'id',
+            "name"
+        ]
