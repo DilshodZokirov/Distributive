@@ -1,6 +1,11 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
+from rest_framework.parsers import FileUploadParser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from api.user.serializers import LoginUserSerializer, RegistrationSerializer
 from apps.user.models import User
@@ -18,8 +23,15 @@ class RegisterUserApiView(APIView):
         return Response(data)
 
 
-class LoginUserAPIView(APIView):
-    def post(self, request):
+class LoginUserModelView(ModelViewSet):
+    # authentication_classes = []
+    permission_classes = [AllowAny, ]
+    # parser_classes = [FileUploadParser,]
+    queryset = User.objects.all()
+
+    @swagger_auto_schema(method='post', request_body=LoginUserSerializer)
+    @action(methods=['post'], detail=False)
+    def login(self, request):
         serializer = LoginUserSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']

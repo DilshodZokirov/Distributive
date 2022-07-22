@@ -11,8 +11,9 @@ from apps.user.models import User
 class LoginUserSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=255, write_only=True)
     password = serializers.CharField(max_length=255, write_only=True)
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
-    token = serializers.PrimaryKeyRelatedField(queryset=Token.objects.all(), required=False)
+
+    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+    # token = serializers.PrimaryKeyRelatedField(queryset=Token.objects.all(), required=False)
 
     class Meta:
         model = User
@@ -63,7 +64,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if 10 >= len(phone_number) >= 12:
             raise ValidationError("Iltimos telefon nomerni to'g'ri kiriting !!!")
         if attrs.get('password') != attrs.get("password2"):
-            raise ValidationError("Iltimos parolni to'ri kiriting !!!")
+            raise ValidationError("Iltimos parolni to'g'ri kiriting !!!")
         if User.objects.filter(phone_number=phone_number, password=attrs.get("password")).exists():
             raise ValidationError("Bunaqa inson bizning ro'yxatda bor")
         if Company.objects.filter(name=attrs.get("company")).exists():

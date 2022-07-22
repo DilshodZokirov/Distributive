@@ -21,7 +21,7 @@ class WorkerModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, ]
     authentication_classes = [TokenAuthentication, ]
     queryset = User.objects.all()
-    parser_classes = [FileUploadParser, MultiPartParser]
+    parser_classes = [MultiPartParser, ]
     # serializer_class = WorkerUserAllSerializer
     filter_backends = (SearchFilter,)
 
@@ -54,7 +54,9 @@ class WorkerModelViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"message": "Successfully Created"})
+        return Response(
+            {"message": "Successfully Created"}
+        )
 
     @swagger_auto_schema(method='get', responses={200: DistrictEmployeeSerializer, 400: "Bad Request"})
     @action(methods=['get'], detail=False)
