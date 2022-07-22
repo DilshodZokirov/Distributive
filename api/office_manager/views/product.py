@@ -68,7 +68,8 @@ class ProductModelViewSet(ModelViewSet):
     @action(methods=['get'], detail=True)
     def get_one_product(self, request, *args, **kwargs):
         self.serializer_class = GetOneProductSerializer
-        serializer = self.get_serializer(self.get_object())
+        self.queryset = Product.objects.get(pk=kwargs['pk'])
+        serializer = self.get_serializer(self.queryset)
         return Response(serializer.data)
 
     @swagger_auto_schema(method='put', request_body=ProductUpdateAllSerializer,

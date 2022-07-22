@@ -108,9 +108,20 @@ class ProductUpdateAllSerializer(serializers.ModelSerializer):
 # class WarehouseAllSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         pass
+class CategoryOneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = [
+            "id",
+            "name",
+            "category_image",
+            "company"
+        ]
 
 
 class GetOneProductSerializer(serializers.ModelSerializer):
+    category = CategoryOneSerializer()
+
     class Meta:
         model = Product
         fields = [

@@ -26,8 +26,8 @@ class Order(BaseModel):
     lot = models.CharField(max_length=400, null=True, blank=True)
     lon = models.CharField(max_length=300, null=True, blank=True)
     phone_number = models.CharField(max_length=50, null=False, blank=False)
-    paid_price = models.FloatField(null=True, blank=True)
-    total_price = models.FloatField(null=True, blank=True)
+    paid_price = models.FloatField(null=True, blank=True, default=0)
+    total_price = models.FloatField(null=True, blank=True, default=0)
     paid_position = models.CharField(max_length=30, choices=MoneyPaid.choices, default=MoneyPaid.NOT_PAID)
     order_position = models.CharField(max_length=400, choices=OrderPosition.choices, default=OrderPosition.PENDING)
 
