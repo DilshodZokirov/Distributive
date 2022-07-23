@@ -1,1 +1,1 @@
-from .models import User, Company
+from .models import User, Company, UserMove

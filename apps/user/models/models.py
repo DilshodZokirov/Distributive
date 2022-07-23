@@ -36,12 +36,6 @@ class District(models.Model):
         return self.name
 
 
-class UserMove(BaseModel):
-    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='user_move')
-    lon = models.IntegerField()
-    lot = models.IntegerField()
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     class TYPE(models.Choices):
         UNEMPLOYED = "unemployed"
@@ -72,6 +66,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.phone_number
+
+
+class UserMove(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_move')
+    lon = models.IntegerField()
+    lot = models.IntegerField()
 
 
 class Company(BaseModel):

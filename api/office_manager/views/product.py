@@ -65,7 +65,7 @@ class ProductModelViewSet(ModelViewSet):
     @swagger_auto_schema(method='get', manual_parameters=[openapi.Parameter("id", in_=openapi.IN_PATH,
                                                                             description="Product ID",
                                                                             type=openapi.TYPE_STRING)])
-    @action(methods=['get'], detail=True)
+    @action(methods=['get'], detail=True, url_path="get_one_product", url_name="get_one_product")
     def get_one_product(self, request, *args, **kwargs):
         self.serializer_class = GetOneProductSerializer
         self.queryset = Product.objects.get(pk=kwargs['pk'])
